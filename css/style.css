@@ -43,3 +43,25 @@ img {
   opacity: 1;
   transform: scale(1);
 }
+
+[data-control='slider'] {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+[data-control='slider'] li a {
+  display: block;
+  width: 15px;
+  height: 15px;
+  background: rgba(0, 0, 0, .7);
+  border-radius: 50%;
+  overflow: hidden;
+  text-indent: -999px;
+  margin: 5px;
+}
+
+[data-control='slider'] li.active a, [data-control='slider'] li a:hover {
+  width: 30px;
+  border-radius: 10px;
+}
