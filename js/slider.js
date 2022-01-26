@@ -1,8 +1,11 @@
+import debounce from './debounce.js';
+
 export default class Slider {
   constructor(slider, wrapper) {
     this.slider = document.querySelector(slider);
     this.wrapper = document.querySelector(wrapper);
     this.distance = { finalPosition: 0, startX: 0, movement: 0, }
+    this.activeClass = 'active';
   }
 
   transition(active) {
@@ -64,13 +67,6 @@ export default class Slider {
     this.wrapper.addEventListener('touchend', this.onEnd);
   }
 
-  bindEvents() {
-    this.onStart = this.onStart.bind(this);
-    this.transition(true);
-    this.onMove = this.onMove.bind(this);
-    this.onEnd = this.onEnd.bind(this);
-  }
-
   // Slider config
   sliderPosition(slider) {
     const margin = (this.wrapper.offsetWidth - slider.offsetWidth) / 2;
@@ -98,6 +94,12 @@ export default class Slider {
     this.moveSlider(activeSlider.position);
     this.sliderIndexNav(index);
     this.distance.finalPosition = activeSlider.position;
+    this.changeActiveClass();
+  }
+
+  changeActiveClass() {
+    this.sliderArray.forEach(item => item.element.classList.remove(this.activeClass));
+    this.sliderArray[this.index.active].element.classList.add(this.activeClass);
   }
 
   activePrevSlider() {
@@ -108,11 +110,31 @@ export default class Slider {
     if (this.index.next !== undefined) this.changeSlider(this.index.next);
   }
 
+  onResize() {
+    setInterval(() => {
+      this.sliderConfig();
+      this.changeSlider(this.index.active);
+    }, 1000);
+  }
+
+  addResizeEvent() {
+    window.addEventListener('resize', this.onResize);
+  }
+
+  bindEvents() {
+    this.onStart = this.onStart.bind(this);
+    this.onMove = this.onMove.bind(this);
+    this.onEnd = this.onEnd.bind(this);
+    this.onResize = debounce(this.onResize.bind(this), 200);
+  }
+  
   init() {
     if (this.slider && this.wrapper) {
       this.bindEvents();
+      this.transition(true);
       this.addSliderEvent();
       this.sliderConfig();
+      this.addResizeEvent();
     }
     return this;
   }
