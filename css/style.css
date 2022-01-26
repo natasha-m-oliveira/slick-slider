@@ -61,7 +61,11 @@ img {
   margin: 5px;
 }
 
-[data-control='slider'] li.active a, [data-control='slider'] li a:hover {
+[data-control='slider'] li.active a {
   width: 30px;
   border-radius: 10px;
+}
+
+[data-control='slider'] li a:hover {
+  background: rgba(0, 0, 0, .8);
 }
