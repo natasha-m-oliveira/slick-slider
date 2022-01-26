@@ -21,10 +21,25 @@ img {
   display: flex;
 }
 
+.slider:hover {
+  will-change: transform;
+}
+
 .slider li {
   /* desabilita o shrink que força a redução do tamanho dos itens para que caibam dentro do container */
   flex-shrink: 0;
   width: 80vw;
   max-width: 800px;
   margin: 0 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .4);
+  opacity: .8;
+  transform: scale(.8);
+  transition: .4s;
+}
+
+.slider li.active {
+  opacity: 1;
+  transform: scale(1);
 }
