@@ -15,6 +15,8 @@ img {
 
 .slider-wrapper {
   overflow: hidden;
+  position: relative;
+  margin-top: 20px;
 }
 
 .slider {
@@ -47,7 +49,7 @@ img {
 [data-control='slider'] {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 [data-control='slider'] li a {
@@ -68,4 +70,29 @@ img {
 
 [data-control='slider'] li a:hover {
   background: rgba(0, 0, 0, .8);
+}
+
+.arrow-nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  padding: 0 5%;
+  box-sizing: border-box;
+}
+
+.arrow-nav button {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  width: 30px;
+  height: 30px;
+  background: rgba(0, 0, 0, .7) url("../img/arrow.svg") center center no-repeat;
+  transition: .3s;
+}
+
+.arrow-nav button.prev {
+  transform: rotate(-180deg);
 }

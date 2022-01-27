@@ -148,7 +148,7 @@ export class Slider {
   }
 }
 
-export class SliderNav extends Slider{
+export default class SliderNav extends Slider{
   constructor(slider, wrapper) {
     super(slider, wrapper);
     this.bindControlEvents();
@@ -187,6 +187,19 @@ export class SliderNav extends Slider{
   activeControlItem() {
     this.controlArray.forEach((item) => item.classList.remove(this.activeClass));
     this.controlArray[this.index.active].classList.add(this.activeClass);
+
+    if (this.index.prev === undefined) {
+      this.prevElement.style.opacity = '0';
+      this.prevElement.style.cursor = 'default';
+    } else if (this.index.next === undefined) {
+      this.nextElement.style.opacity = '0';
+      this.nextElement.style.cursor = 'default';
+    } else {
+      this.prevElement.style.opacity = '1';
+      this.nextElement.style.opacity = '1';
+      this.prevElement.style.cursor = 'pointer';
+      this.nextElement.style.cursor = 'pointer';
+    }
   }
 
   addControl(customControl) {
