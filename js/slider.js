@@ -1,10 +1,10 @@
 import debounce from './debounce.js';
 
-export class Slider {
+export default class Slider {
   constructor(slider, wrapper) {
     this.slider = document.querySelector(slider);
     this.wrapper = document.querySelector(wrapper);
-    this.distance = { finalPosition: 0, startX: 0, movement: 0, }
+    this.distance = { finalPosition: 0, startX: 0, movement: 0 };
     this.activeClass = 'active';
 
     // Criando um novo evento
@@ -38,7 +38,7 @@ export class Slider {
     this.wrapper.addEventListener(movetype, this.onMove);
     this.transition(false);
   }
-  
+
   onMove(event) {
     const pointerPosition = (event.type === 'mousemove') ? event.clientX : event.changedTouches[0].clientX;
     const finalPosition = this.updatePosition(pointerPosition);
@@ -59,7 +59,7 @@ export class Slider {
     } else if (this.distance.movement < -120 && this.index.prev !== undefined) {
       this.activePrevSlider();
     } else {
-      this.changeSlider(this.index.active)
+      this.changeSlider(this.index.active);
     }
   }
 
@@ -77,9 +77,9 @@ export class Slider {
   }
 
   sliderConfig() {
-    this.sliderArray = [...this.slider.children].map(element => {
+    this.sliderArray = [...this.slider.children].map((element) => {
       const position = this.sliderPosition(element);
-      return { position, element, };
+      return { position, element };
     });
   }
 
@@ -89,7 +89,7 @@ export class Slider {
       prev: index ? index - 1 : undefined,
       active: index,
       next: index === last ? undefined : index + 1,
-    }
+    };
   }
 
   changeSlider(index) {
@@ -102,22 +102,23 @@ export class Slider {
   }
 
   changeActiveClass() {
-    this.sliderArray.forEach(item => item.element.classList.remove(this.activeClass));
+    this.sliderArray.forEach((item) => item.element.classList.remove(this.activeClass));
     this.sliderArray[this.index.active].element.classList.add(this.activeClass);
   }
 
   activePrevSlider() {
     if (this.index.prev !== undefined) this.changeSlider(this.index.prev);
   }
-  
+
   activeNextSlider() {
     if (this.index.next !== undefined) this.changeSlider(this.index.next);
   }
 
   onResize() {
-    setInterval(() => {
+    const timer = setInterval(() => {
       this.sliderConfig();
       this.changeSlider(this.index.active);
+      clearInterval(timer);
     }, 1000);
   }
 
@@ -130,11 +131,11 @@ export class Slider {
     this.onMove = this.onMove.bind(this);
     this.onEnd = this.onEnd.bind(this);
     this.onResize = debounce(this.onResize.bind(this), 200);
-    
+
     this.activePrevSlider = this.activePrevSlider.bind(this);
     this.activeNextSlider = this.activeNextSlider.bind(this);
   }
-  
+
   init() {
     if (this.slider && this.wrapper) {
       this.bindEvents();
@@ -145,73 +146,5 @@ export class Slider {
       this.changeSlider(3);
     }
     return this;
-  }
-}
-
-export default class SliderNav extends Slider{
-  constructor(slider, wrapper) {
-    super(slider, wrapper);
-    this.bindControlEvents();
-  }
-  addArrow(prev, next) {
-    this.prevElement = document.querySelector(prev);
-    this.nextElement = document.querySelector(next);
-    this.addArrowEvent();
-  }
-
-  addArrowEvent() {
-    this.prevElement.addEventListener('click', this.activePrevSlider);
-    this.nextElement.addEventListener('click', this.activeNextSlider);
-  }
-
-  createControl() {
-    const control = document.createElement('ul');
-    control.dataset.control = 'slider';
-
-    this.sliderArray.forEach((item, index) => {
-      control.innerHTML += `<li><a href="#slider${index + 1}">${index + 1}</a></li>`;
-    });
-    this.wrapper.appendChild(control);
-
-    return control;
-  }
-
-  eventControl(item, index) {
-    item.addEventListener('click', (event) => {
-      event.preventDefault();
-      this.changeSlider(index);
-    });
-    this.wrapper.addEventListener('changeEvent', this.activeControlItem);
-  }
-
-  activeControlItem() {
-    this.controlArray.forEach((item) => item.classList.remove(this.activeClass));
-    this.controlArray[this.index.active].classList.add(this.activeClass);
-
-    if (this.index.prev === undefined) {
-      this.prevElement.style.opacity = '0';
-      this.prevElement.style.cursor = 'default';
-    } else if (this.index.next === undefined) {
-      this.nextElement.style.opacity = '0';
-      this.nextElement.style.cursor = 'default';
-    } else {
-      this.prevElement.style.opacity = '1';
-      this.nextElement.style.opacity = '1';
-      this.prevElement.style.cursor = 'pointer';
-      this.nextElement.style.cursor = 'pointer';
-    }
-  }
-
-  addControl(customControl) {
-    this.control = document.querySelector(customControl) || this.createControl();
-    this.controlArray = [...this.control.children];
-    
-    this.activeControlItem();
-    this.controlArray.forEach(this.eventControl);
-  }
-
-  bindControlEvents() {
-    this.eventControl = this.eventControl.bind(this);
-    this.activeControlItem = this.activeControlItem.bind(this);
   }
 }
